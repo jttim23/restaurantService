@@ -43,13 +43,27 @@ public class RestaurantService {
     }
     Restaurant restaurant = restaurantRepository.findById(restaurantId).orElseThrow(IllegalArgumentException::new);
     if (!(restaurant.getTables().size() > 0)) {
+
       newTables = newTables.stream().filter(Objects::nonNull).collect(Collectors.toList());
+      newTables.stream().forEach(table -> {table.setRestaurant(restaurant);});
       restaurant.setTables(newTables);
       restaurantRepository.save(restaurant);
     }
     return restaurant;
   }
 
+  public Restaurant saveNewTable(Table newTable, Long restaurantId) {
+    if (restaurantId == null || newTable == null) {
+      throw new IllegalArgumentException();
+    }
+    Restaurant restaurant = restaurantRepository.findById(restaurantId).orElseThrow(IllegalArgumentException::new);
+    newTable.setRestaurant(restaurant);
+    List<Table> tables = restaurant.getTables();
+    tables.add(newTable);
+    restaurant.setTables(tables);
+    restaurantRepository.save(restaurant);
+    return restaurant;
+  }
   public Restaurant saveNewAddress(Address address, Long restaurantId) {
     if (address == null || restaurantId == null) {
       throw new IllegalArgumentException();
@@ -98,7 +112,7 @@ public class RestaurantService {
       throw new IllegalArgumentException();
     }
     Restaurant restaurant = restaurantRepository.findById(restaurantId).orElseThrow(IllegalArgumentException::new);
-    if (restaurant.getOpeningHours() == null) {
+    if (!(restaurant.getOpeningHours().size()>0)) {
       restaurant.setOpeningHours(openingHours);
       restaurantRepository.save(restaurant);
     }
@@ -106,15 +120,5 @@ public class RestaurantService {
   }
 
 
-  public Restaurant saveNewTable(Table newTable, Long restaurantId) {
-    if (restaurantId == null || newTable == null) {
-      throw new IllegalArgumentException();
-    }
-    Restaurant restaurant = restaurantRepository.findById(restaurantId).orElseThrow(IllegalArgumentException::new);
-    List<Table> tables = restaurant.getTables();
-    tables.add(newTable);
-    restaurant.setTables(tables);
-    restaurantRepository.save(restaurant);
-    return restaurant;
-  }
+
 }

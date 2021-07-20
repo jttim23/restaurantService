@@ -20,7 +20,7 @@ TableService {
     if (restaurantId == null) {
       throw new IllegalArgumentException();
     }
-    return tableRepository.findAll().stream().filter(table -> table.getRestaurantId() == restaurantId).collect(Collectors.toList());
+    return tableRepository.findAll().stream().filter(table -> table.getRestaurant().getId().equals(restaurantId)).collect(Collectors.toList());
   }
 
   public Table updateTable(Integer peopleQuantity, String description, Long tableId) {

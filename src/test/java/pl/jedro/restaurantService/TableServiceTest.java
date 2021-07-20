@@ -4,6 +4,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import pl.jedro.restaurantService.model.Restaurant;
 import pl.jedro.restaurantService.model.Table;
 import pl.jedro.restaurantService.repositories.TableRepository;
 import pl.jedro.restaurantService.services.TableService;
@@ -27,7 +28,7 @@ class TableServiceTest {
 
   @Test
   public void returnsOldTableWhenNewDescriptionIsEmpty() {
-    Table newTable = new Table(1l, 4, "test", 1l);
+    Table newTable = new Table(1l, 4, "test", new Restaurant());
     when(repository.findById(anyLong())).thenReturn(Optional.of(newTable));
     Table updatedTable = service.updateTable(4, "", 1l);
     assertEquals(newTable.getDescription(), updatedTable.getDescription());
@@ -35,7 +36,7 @@ class TableServiceTest {
 
   @Test
   public void returnsOldTableWhenNewPeopleLessThan1() {
-    Table newTable = new Table(1l, 4, "test", 1l);
+    Table newTable = new Table(1l, 4, "test", new Restaurant());
     when(repository.findById(anyLong())).thenReturn(Optional.of(newTable));
     Table updatedTable = service.updateTable(0, "newDesc", 1l);
     assertEquals(newTable.getDescription(), updatedTable.getDescription());
@@ -43,7 +44,7 @@ class TableServiceTest {
 
   @Test
   public void returnsOldTableWhenNewDescriptionIsNull() {
-    Table newTable = new Table(1l, 4, "", 1l);
+    Table newTable = new Table(1l, 4, "", new Restaurant());
     when(repository.findById(anyLong())).thenReturn(Optional.of(newTable));
     Table updatedTable = service.updateTable(4, null, 1l);
     assertEquals(newTable.getDescription(), updatedTable.getDescription());

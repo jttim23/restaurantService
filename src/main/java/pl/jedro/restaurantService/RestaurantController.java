@@ -86,9 +86,9 @@ private OpeningHoursService openingHoursService;
   }
 
   @PutMapping("/v1/restaurants/{*}/openingHours/update/{openingHoursId}")
-  public OpeningHour putOpeningHours(@RequestParam String dayOfWeek, @RequestParam String from, @RequestParam String to,
+  public OpeningHour putOpeningHours(@RequestParam String dayOfWeek, @RequestParam String fromHour, @RequestParam String toHour,
                                      @PathVariable Long openingHoursId) {
-    return openingHoursService.updateOpeningHours(dayOfWeek,from,to,openingHoursId);
+    return openingHoursService.updateOpeningHours(dayOfWeek,fromHour,toHour,openingHoursId);
   }
 
 

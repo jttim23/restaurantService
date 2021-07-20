@@ -16,16 +16,16 @@ public class OpeningHour {
   private String dayOfWeek;
   private String fromHour;
   private String toHour;
-  private Long restaurantId;
+
 
   public OpeningHour() {
   }
 
-  public OpeningHour(Long id, String dayOfWeek, String fromHour, String toHour, Long restaurantId) {
+  public OpeningHour(Long id, String dayOfWeek, String fromHour, String toHour) {
     this.id = id;
     this.dayOfWeek = dayOfWeek;
     this.fromHour = fromHour;
     this.toHour = toHour;
-    this.restaurantId = restaurantId;
+
   }
 }

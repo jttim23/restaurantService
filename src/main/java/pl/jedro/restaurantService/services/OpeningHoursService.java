@@ -11,14 +11,14 @@ public class OpeningHoursService {
   public OpeningHoursService(HoursRepository openingTimeRepository) {
     this.openingHoursRepository = openingTimeRepository;
   }
-  public OpeningHour updateOpeningHours(String dayOfWeek, String from, String to, Long openingHoursId) {
-    if (openingHoursId == null || dayOfWeek == null || from == null || to == null) {
+  public OpeningHour updateOpeningHours(String dayOfWeek, String fromHour, String toHour, Long openingHoursId) {
+    if (openingHoursId == null || dayOfWeek == null || fromHour == null || toHour == null) {
       throw new IllegalArgumentException();
     }
     OpeningHour openingTime = openingHoursRepository.findById(openingHoursId).orElseThrow(IllegalArgumentException::new);
     openingTime.setDayOfWeek(dayOfWeek);
-    openingTime.setFromHour(from);
-    openingTime.setToHour(to);
+    openingTime.setFromHour(fromHour);
+    openingTime.setToHour(toHour);
     openingHoursRepository.save(openingTime);
     return openingTime;
   }

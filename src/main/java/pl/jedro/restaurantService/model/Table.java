@@ -1,10 +1,12 @@
 package pl.jedro.restaurantService.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 
 @Entity
 @Data
@@ -14,15 +16,17 @@ public class Table {
   private Long id;
   private Integer peopleQuantity;
   private String description;
-  private Long restaurantId;
+  @ManyToOne
+  @JsonIgnore
+  private Restaurant restaurant;
 
   public Table() {
   }
 
-  public Table(Long id, Integer peopleQuantity, String description, Long restaurantId) {
+  public Table(Long id, Integer peopleQuantity, String description, Restaurant restaurant) {
     this.id = id;
     this.peopleQuantity = peopleQuantity;
     this.description = description;
-    this.restaurantId = restaurantId;
+    this.restaurant = restaurant;
   }
 }
