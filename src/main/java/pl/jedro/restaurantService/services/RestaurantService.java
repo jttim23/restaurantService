@@ -1,10 +1,7 @@
 package pl.jedro.restaurantService.services;
 
 import org.springframework.stereotype.Service;
-import pl.jedro.restaurantService.model.Address;
-import pl.jedro.restaurantService.model.OpeningHour;
-import pl.jedro.restaurantService.model.Restaurant;
-import pl.jedro.restaurantService.model.Table;
+import pl.jedro.restaurantService.model.*;
 import pl.jedro.restaurantService.repositories.RestaurantRepository;
 
 import java.util.List;
@@ -43,9 +40,9 @@ public class RestaurantService {
     }
     Restaurant restaurant = restaurantRepository.findById(restaurantId).orElseThrow(IllegalArgumentException::new);
     if (!(restaurant.getTables().size() > 0)) {
-
       newTables = newTables.stream().filter(Objects::nonNull).collect(Collectors.toList());
-      newTables.stream().forEach(table -> {table.setRestaurant(restaurant);});
+      newTables.forEach(table -> {table.setRestaurant(restaurant);
+      table.setState(State.FREE);});
       restaurant.setTables(newTables);
       restaurantRepository.save(restaurant);
     }
@@ -58,6 +55,7 @@ public class RestaurantService {
     }
     Restaurant restaurant = restaurantRepository.findById(restaurantId).orElseThrow(IllegalArgumentException::new);
     newTable.setRestaurant(restaurant);
+    newTable.setState(State.FREE);
     List<Table> tables = restaurant.getTables();
     tables.add(newTable);
     restaurant.setTables(tables);

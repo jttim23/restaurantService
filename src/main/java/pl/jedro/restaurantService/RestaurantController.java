@@ -2,10 +2,7 @@ package pl.jedro.restaurantService;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-import pl.jedro.restaurantService.model.Address;
-import pl.jedro.restaurantService.model.OpeningHour;
-import pl.jedro.restaurantService.model.Restaurant;
-import pl.jedro.restaurantService.model.Table;
+import pl.jedro.restaurantService.model.*;
 import pl.jedro.restaurantService.services.OpeningHoursService;
 import pl.jedro.restaurantService.services.RestaurantService;
 import pl.jedro.restaurantService.services.TableService;
@@ -40,6 +37,10 @@ private OpeningHoursService openingHoursService;
   @GetMapping("/v1/restaurants/{restaurantId}/tables/all")
   public List<Table> getAllTables(@PathVariable Long restaurantId) {
     return tableService.findAllTables(restaurantId);
+  }
+  @GetMapping("/v1/restaurants/{restaurantId}/tables/available")
+  public AvailableTablesDTO getAvailableTables(@RequestParam String date, @PathVariable Long restaurantId) {
+    return tableService.findAvailableTables(date,restaurantId);
   }
 
   @PostMapping("/v1/restaurants/{restaurantId}/tables/new")

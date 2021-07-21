@@ -1,31 +1,28 @@
 package pl.jedro.restaurantService.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import java.time.DayOfWeek;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Locale;
+
 @Data
 @Entity
+@AllArgsConstructor
+@NoArgsConstructor
 public class OpeningHour {
   @Id
   @GeneratedValue
   private Long id;
-  private String dayOfWeek;
-  private String fromHour;
-  private String toHour;
+  private DayOfWeek dayOfWeek;
+  private LocalTime fromHour;
+  private LocalTime toHour;
 
-
-  public OpeningHour() {
-  }
-
-  public OpeningHour(Long id, String dayOfWeek, String fromHour, String toHour) {
-    this.id = id;
-    this.dayOfWeek = dayOfWeek;
-    this.fromHour = fromHour;
-    this.toHour = toHour;
-
-  }
 }

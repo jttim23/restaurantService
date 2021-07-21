@@ -16,9 +16,9 @@ public class OpeningHoursService {
       throw new IllegalArgumentException();
     }
     OpeningHour openingTime = openingHoursRepository.findById(openingHoursId).orElseThrow(IllegalArgumentException::new);
-    openingTime.setDayOfWeek(dayOfWeek);
-    openingTime.setFromHour(fromHour);
-    openingTime.setToHour(toHour);
+//    openingTime.setDayOfWeek(dayOfWeek.);
+//    openingTime.setFromHour(fromHour);
+//    openingTime.setToHour(toHour);
     openingHoursRepository.save(openingTime);
     return openingTime;
   }
