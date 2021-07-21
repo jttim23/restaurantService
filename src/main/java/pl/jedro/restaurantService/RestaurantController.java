@@ -57,7 +57,10 @@ private OpeningHoursService openingHoursService;
   public Table putTable(@RequestParam Integer peopleQuantity, @RequestParam String description, @PathVariable Long tableId) {
     return tableService.updateTable(peopleQuantity, description, tableId);
   }
-
+  @PutMapping("/v1/restaurants/tables/setState/{tableId}")
+  public Table putTableState(@RequestParam String state, @PathVariable Long tableId) {
+    return tableService.setTableState(state, tableId);
+  }
   @GetMapping("/v1/restaurants/{restaurantId}/address")
   public Address getAddress(@PathVariable Long restaurantId) {
     return restaurantService.findAddress(restaurantId);

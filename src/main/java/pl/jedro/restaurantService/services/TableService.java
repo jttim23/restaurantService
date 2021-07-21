@@ -86,4 +86,15 @@ TableService {
         throw new IllegalArgumentException(e.getMessage());
       }
     }
+
+  public Table setTableState(String state, Long tableId) {
+    Table table = tableRepository.findById(tableId).orElseThrow(IllegalArgumentException::new);
+    try {
+      table.setState(State.valueOf(state));
+    } catch (EnumConstantNotPresentException e){
+      throw new IllegalArgumentException();
+    }
+    return table;
   }
+
+}
