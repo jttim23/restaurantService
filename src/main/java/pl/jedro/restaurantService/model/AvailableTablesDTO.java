@@ -10,5 +10,5 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class AvailableTablesDTO {
-  private List<Table> availableTables;
+  private List<Desk> availableDesks;
 }

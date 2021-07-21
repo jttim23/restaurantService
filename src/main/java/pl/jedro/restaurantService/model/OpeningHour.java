@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import java.time.DayOfWeek;
 import java.time.LocalTime;
@@ -19,7 +20,7 @@ import java.util.Locale;
 @NoArgsConstructor
 public class OpeningHour {
   @Id
-  @GeneratedValue
+  @GeneratedValue(strategy= GenerationType.IDENTITY)
   private Long id;
   private DayOfWeek dayOfWeek;
   private LocalTime fromHour;

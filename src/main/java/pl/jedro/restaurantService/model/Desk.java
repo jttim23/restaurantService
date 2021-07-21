@@ -5,18 +5,15 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 
 @Entity
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Table {
+public class Desk {
   @Id
-  @GeneratedValue
+  @GeneratedValue(strategy= GenerationType.IDENTITY)
   private Long id;
   private Integer peopleQuantity;
   private String description;

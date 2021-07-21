@@ -35,7 +35,7 @@ private OpeningHoursService openingHoursService;
   }
 
   @GetMapping("/v1/restaurants/{restaurantId}/tables/all")
-  public List<Table> getAllTables(@PathVariable Long restaurantId) {
+  public List<Desk> getAllTables(@PathVariable Long restaurantId) {
     return tableService.findAllTables(restaurantId);
   }
   @GetMapping("/v1/restaurants/{restaurantId}/tables/available")
@@ -44,21 +44,21 @@ private OpeningHoursService openingHoursService;
   }
 
   @PostMapping("/v1/restaurants/{restaurantId}/tables/new")
-  public Restaurant postTable(@RequestBody Table newTable, @PathVariable Long restaurantId) {
-    return restaurantService.saveNewTable(newTable, restaurantId);
+  public Restaurant postTable(@RequestBody Desk newDesk, @PathVariable Long restaurantId) {
+    return restaurantService.saveNewTable(newDesk, restaurantId);
   }
 
   @PostMapping("/v1/restaurants/{restaurantId}/newTables")
-  public Restaurant postTable(@RequestBody List<Table> newTables, @PathVariable Long restaurantId) {
-    return restaurantService.saveNewTables(newTables, restaurantId);
+  public Restaurant postTable(@RequestBody List<Desk> newDesks, @PathVariable Long restaurantId) {
+    return restaurantService.saveNewTables(newDesks, restaurantId);
   }
 
   @PutMapping("/v1/restaurants/{*}/tables/update/{tableId}")
-  public Table putTable(@RequestParam Integer peopleQuantity, @RequestParam String description, @PathVariable Long tableId) {
+  public Desk putTable(@RequestParam Integer peopleQuantity, @RequestParam String description, @PathVariable Long tableId) {
     return tableService.updateTable(peopleQuantity, description, tableId);
   }
   @PutMapping("/v1/restaurants/tables/setState/{tableId}")
-  public Table putTableState(@RequestParam String state, @PathVariable Long tableId) {
+  public Desk putTableState(@RequestParam String state, @PathVariable Long tableId) {
     return tableService.setTableState(state, tableId);
   }
   @GetMapping("/v1/restaurants/{restaurantId}/address")

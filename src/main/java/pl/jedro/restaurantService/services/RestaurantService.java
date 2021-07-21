@@ -34,31 +34,31 @@ public class RestaurantService {
     return restaurant;
   }
 
-  public Restaurant saveNewTables(List<Table> newTables, Long restaurantId) {
-    if (restaurantId == null || newTables == null || newTables.size() < 1) {
+  public Restaurant saveNewTables(List<Desk> newDesks, Long restaurantId) {
+    if (restaurantId == null || newDesks == null || newDesks.size() < 1) {
       throw new IllegalArgumentException();
     }
     Restaurant restaurant = restaurantRepository.findById(restaurantId).orElseThrow(IllegalArgumentException::new);
-    if (!(restaurant.getTables().size() > 0)) {
-      newTables = newTables.stream().filter(Objects::nonNull).collect(Collectors.toList());
-      newTables.forEach(table -> {table.setRestaurant(restaurant);
+    if (!(restaurant.getDesks().size() > 0)) {
+      newDesks = newDesks.stream().filter(Objects::nonNull).collect(Collectors.toList());
+      newDesks.forEach(table -> {table.setRestaurant(restaurant);
       table.setState(State.FREE);});
-      restaurant.setTables(newTables);
+      restaurant.setDesks(newDesks);
       restaurantRepository.save(restaurant);
     }
     return restaurant;
   }
 
-  public Restaurant saveNewTable(Table newTable, Long restaurantId) {
-    if (restaurantId == null || newTable == null) {
+  public Restaurant saveNewTable(Desk newDesk, Long restaurantId) {
+    if (restaurantId == null || newDesk == null) {
       throw new IllegalArgumentException();
     }
     Restaurant restaurant = restaurantRepository.findById(restaurantId).orElseThrow(IllegalArgumentException::new);
-    newTable.setRestaurant(restaurant);
-    newTable.setState(State.FREE);
-    List<Table> tables = restaurant.getTables();
-    tables.add(newTable);
-    restaurant.setTables(tables);
+    newDesk.setRestaurant(restaurant);
+    newDesk.setState(State.FREE);
+    List<Desk> desks = restaurant.getDesks();
+    desks.add(newDesk);
+    restaurant.setDesks(desks);
     restaurantRepository.save(restaurant);
     return restaurant;
   }

@@ -16,7 +16,7 @@ import java.util.Set;
 public class Restaurant {
 
   @Id
-  @GeneratedValue
+  @GeneratedValue(strategy=GenerationType.IDENTITY)
   private Long id;
   private String emailAddress;
   private String password;
@@ -26,7 +26,7 @@ public class Restaurant {
   @OneToMany(cascade= CascadeType.ALL)
   private Set<OpeningHour> openingHours;
   @OneToMany(cascade= CascadeType.ALL)
-  private List<Table> tables;
+  private List<Desk> desks;
 
 
 }

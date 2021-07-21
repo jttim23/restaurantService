@@ -1,31 +1,26 @@
 package pl.jedro.restaurantService.model;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 @Entity
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class Address {
   @Id
-  @GeneratedValue
+  @GeneratedValue(strategy= GenerationType.IDENTITY)
   private Long id;
   private String street;
   private String apartmentNumber;
   private String zipCode;
   private String city;
 
-  public Address() {
-  }
-
-  public Address(Long id, String street, String apartmentNumber, String zipCode, String city) {
-    this.id = id;
-    this.street = street;
-    this.apartmentNumber = apartmentNumber;
-    this.zipCode = zipCode;
-    this.city = city;
-  }
 }
 

@@ -25,30 +25,30 @@ TableService {
     this.restaurantRepository = restaurantRepository;
   }
 
-  public List<Table> findAllTables(Long restaurantId) {
+  public List<Desk> findAllTables(Long restaurantId) {
     if (restaurantId == null) {
       throw new IllegalArgumentException();
     }
     return tableRepository.findAll().stream().filter(table -> table.getRestaurant().getId().equals(restaurantId)).collect(Collectors.toList());
   }
 
-  public Table updateTable(Integer peopleQuantity, String description, Long tableId) {
+  public Desk updateTable(Integer peopleQuantity, String description, Long tableId) {
     if (tableId == null) {
       throw new IllegalArgumentException();
     }
-    Table savedTable = tableRepository.findById(tableId).orElseThrow(IllegalArgumentException::new);
+    Desk savedDesk = tableRepository.findById(tableId).orElseThrow(IllegalArgumentException::new);
     if (description != null && !description.isEmpty() && peopleQuantity > 0) {
-      savedTable.setPeopleQuantity(peopleQuantity);
-      savedTable.setDescription(description);
-      tableRepository.save(savedTable);
+      savedDesk.setPeopleQuantity(peopleQuantity);
+      savedDesk.setDescription(description);
+      tableRepository.save(savedDesk);
     }
 
-    return savedTable;
+    return savedDesk;
   }
 
 
   public AvailableTablesDTO findAvailableTables(String date, Long restaurantId) {
-    List<Table> tables = new ArrayList<>();
+    List<Desk> desks = new ArrayList<>();
     if (date == null || date.isEmpty() || restaurantId == null) {
       throw new IllegalArgumentException();
     }
@@ -61,10 +61,10 @@ TableService {
     }
     Restaurant restaurant = restaurantRepository.findById(restaurantId).orElseThrow(IllegalArgumentException::new);
     if (restaurantIsOpen(dateTime, restaurant)) {
-      tables = restaurant.getTables().stream().filter(table -> !table.getState().equals(State.RESERVED)).collect(Collectors.toList());
+      desks = restaurant.getDesks().stream().filter(table -> !table.getState().equals(State.RESERVED)).collect(Collectors.toList());
     }
     AvailableTablesDTO availableTablesDTO = new AvailableTablesDTO();
-    availableTablesDTO.setAvailableTables(tables);
+    availableTablesDTO.setAvailableDesks(desks);
     return availableTablesDTO;
   }
 
@@ -87,14 +87,14 @@ TableService {
       }
     }
 
-  public Table setTableState(String state, Long tableId) {
-    Table table = tableRepository.findById(tableId).orElseThrow(IllegalArgumentException::new);
+  public Desk setTableState(String state, Long tableId) {
+    Desk desk = tableRepository.findById(tableId).orElseThrow(IllegalArgumentException::new);
     try {
-      table.setState(State.valueOf(state));
+      desk.setState(State.valueOf(state));
     } catch (EnumConstantNotPresentException e){
       throw new IllegalArgumentException();
     }
-    return table;
+    return desk;
   }
 
 }
