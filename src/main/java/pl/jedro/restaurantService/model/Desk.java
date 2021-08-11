@@ -13,7 +13,7 @@ import javax.persistence.*;
 @AllArgsConstructor
 public class Desk {
   @Id
-  @GeneratedValue(strategy= GenerationType.IDENTITY)
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
   private Integer peopleQuantity;
   private String description;

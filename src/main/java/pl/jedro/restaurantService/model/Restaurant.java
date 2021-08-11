@@ -16,16 +16,16 @@ import java.util.Set;
 public class Restaurant {
 
   @Id
-  @GeneratedValue(strategy=GenerationType.IDENTITY)
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
   private String emailAddress;
   private String password;
   private String phoneNumber;
-  @OneToOne(cascade= CascadeType.ALL)
+  @OneToOne(cascade = CascadeType.ALL)
   private Address address;
-  @OneToMany(cascade= CascadeType.ALL)
+  @OneToMany(cascade = CascadeType.ALL)
   private Set<OpeningHour> openingHours;
-  @OneToMany(cascade= CascadeType.ALL)
+  @OneToMany(cascade = CascadeType.ALL)
   private List<Desk> desks;
 
 

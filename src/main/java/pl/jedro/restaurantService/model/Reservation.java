@@ -1,26 +1,28 @@
 package pl.jedro.restaurantService.model;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import java.time.DayOfWeek;
-import java.time.LocalTime;
 
-@Data
 @Entity
-@AllArgsConstructor
-@NoArgsConstructor
-public class OpeningHour {
+@Data
+public class Reservation {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
-  private DayOfWeek dayOfWeek;
-  private LocalTime fromHour;
-  private LocalTime toHour;
+  private String customerName;
+  private String customerEmail;
+  private String customerPhoneNumber;
+  private String additionalInfo;
+  private Long restaurantId;
+  private Long deskId;
+  private State state;
+
+  public Reservation() {
+  }
+
 
 }

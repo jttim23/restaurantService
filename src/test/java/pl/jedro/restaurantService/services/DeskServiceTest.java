@@ -1,13 +1,13 @@
-package pl.jedro.restaurantService;
+package pl.jedro.restaurantService.services;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import pl.jedro.restaurantService.model.*;
+import pl.jedro.restaurantService.model.DTOs.TableDTO;
 import pl.jedro.restaurantService.repositories.RestaurantRepository;
 import pl.jedro.restaurantService.repositories.TableRepository;
-import pl.jedro.restaurantService.services.TableService;
 
 import java.time.DayOfWeek;
 import java.time.LocalDateTime;
@@ -18,19 +18,19 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 
-class TableServiceTest {
+class DeskServiceTest {
   @Mock
   private TableRepository repository;
   @Mock
   private RestaurantRepository restaurantRepository;
-  private TableService service;
+  private DeskService service;
   private Desk newDesk;
   private List<Desk> desks;
 
   @BeforeEach
   void setUp() {
     MockitoAnnotations.openMocks(this);
-    service = new TableService(repository, restaurantRepository);
+    service = new DeskService(repository, restaurantRepository);
     newDesk = new Desk(1L, 4, "", State.FREE, new Restaurant());
     desks = new ArrayList<>();
     desks.add(newDesk);
@@ -39,7 +39,7 @@ class TableServiceTest {
   @Test
   public void returnsOldTableWhenNewDescriptionIsEmpty() {
     when(repository.findById(anyLong())).thenReturn(Optional.of(newDesk));
-    Desk updatedDesk = service.updateTable(4, "", 1l);
+    TableDTO updatedDesk = service.updateTable(4, "", 1l);
     assertEquals(newDesk.getDescription(), updatedDesk.getDescription());
   }
 
@@ -47,14 +47,14 @@ class TableServiceTest {
   public void returnsOldTableWhenNewPeopleLessThan1() {
     newDesk.setDescription("test");
     when(repository.findById(anyLong())).thenReturn(Optional.of(newDesk));
-    Desk updatedDesk = service.updateTable(0, "newDesc", 1l);
+    TableDTO updatedDesk = service.updateTable(0, "newDesc", 1l);
     assertEquals(newDesk.getDescription(), updatedDesk.getDescription());
   }
 
   @Test
   public void returnsOldTableWhenNewDescriptionIsNull() {
     when(repository.findById(anyLong())).thenReturn(Optional.of(newDesk));
-    Desk updatedDesk = service.updateTable(4, null, 1l);
+    TableDTO updatedDesk = service.updateTable(4, null, 1l);
     assertEquals(newDesk.getDescription(), updatedDesk.getDescription());
   }
 

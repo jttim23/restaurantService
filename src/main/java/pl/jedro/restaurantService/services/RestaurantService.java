@@ -1,7 +1,14 @@
 package pl.jedro.restaurantService.services;
 
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriComponentsBuilder;
+import pl.jedro.restaurantService.mappers.RestaurantDTOMapper;
+import pl.jedro.restaurantService.mappers.TableDTOMapper;
 import pl.jedro.restaurantService.model.*;
+import pl.jedro.restaurantService.model.DTOs.ReservationListDTO;
+import pl.jedro.restaurantService.model.DTOs.RestaurantDTO;
+import pl.jedro.restaurantService.model.DTOs.TableDTO;
 import pl.jedro.restaurantService.repositories.RestaurantRepository;
 
 import java.util.List;
@@ -13,10 +20,12 @@ import java.util.stream.Collectors;
 public class RestaurantService {
 
   private RestaurantRepository restaurantRepository;
+  private RestTemplate restTemplate;
+  private RestaurantDTOMapper restaurantDTOMapper = RestaurantDTOMapper.INSTANCE;
 
-
-  public RestaurantService(RestaurantRepository restaurantRepository) {
+  public RestaurantService(RestaurantRepository restaurantRepository, RestTemplate restTemplate) {
     this.restaurantRepository = restaurantRepository;
+    this.restTemplate = restTemplate;
   }
 
   public Restaurant findRestaurantById(Long restaurantId) {
@@ -26,34 +35,39 @@ public class RestaurantService {
     return restaurantRepository.findById(restaurantId).orElseThrow(IllegalArgumentException::new);
   }
 
-  public Restaurant saveNewRestaurant(Restaurant restaurant) {
-    if (restaurant == null) {
+  public RestaurantDTO saveNewRestaurant(RestaurantDTO restaurantDTO) {
+    if (restaurantDTO == null) {
       throw new IllegalArgumentException();
     }
+    Restaurant restaurant = restaurantDTOMapper.restaurantDTOtoRestaurant(restaurantDTO);
     restaurantRepository.save(restaurant);
-    return restaurant;
+    return restaurantDTOMapper.restaurantToRestaurantDTO(restaurant);
   }
 
-  public Restaurant saveNewTables(List<Desk> newDesks, Long restaurantId) {
-    if (restaurantId == null || newDesks == null || newDesks.size() < 1) {
+  public Restaurant saveNewTables(List<TableDTO> newTables, Long restaurantId) {
+    if (restaurantId == null || newTables == null || newTables.size() < 1) {
       throw new IllegalArgumentException();
     }
     Restaurant restaurant = restaurantRepository.findById(restaurantId).orElseThrow(IllegalArgumentException::new);
     if (!(restaurant.getDesks().size() > 0)) {
+      List<Desk> newDesks = newTables.stream().map(TableDTOMapper.INSTANCE::tableDTOtoDesk).collect(Collectors.toList());
       newDesks = newDesks.stream().filter(Objects::nonNull).collect(Collectors.toList());
-      newDesks.forEach(table -> {table.setRestaurant(restaurant);
-      table.setState(State.FREE);});
+      newDesks.forEach(table -> {
+        table.setRestaurant(restaurant);
+        table.setState(State.FREE);
+      });
       restaurant.setDesks(newDesks);
       restaurantRepository.save(restaurant);
     }
     return restaurant;
   }
 
-  public Restaurant saveNewTable(Desk newDesk, Long restaurantId) {
-    if (restaurantId == null || newDesk == null) {
+  public Restaurant saveNewTable(TableDTO newTable, Long restaurantId) {
+    if (restaurantId == null || newTable == null) {
       throw new IllegalArgumentException();
     }
     Restaurant restaurant = restaurantRepository.findById(restaurantId).orElseThrow(IllegalArgumentException::new);
+    Desk newDesk = TableDTOMapper.INSTANCE.tableDTOtoDesk(newTable);
     newDesk.setRestaurant(restaurant);
     newDesk.setState(State.FREE);
     List<Desk> desks = restaurant.getDesks();
@@ -62,6 +76,7 @@ public class RestaurantService {
     restaurantRepository.save(restaurant);
     return restaurant;
   }
+
   public Restaurant saveNewAddress(Address address, Long restaurantId) {
     if (address == null || restaurantId == null) {
       throw new IllegalArgumentException();
@@ -110,7 +125,7 @@ public class RestaurantService {
       throw new IllegalArgumentException();
     }
     Restaurant restaurant = restaurantRepository.findById(restaurantId).orElseThrow(IllegalArgumentException::new);
-    if (!(restaurant.getOpeningHours().size()>0)) {
+    if (!(restaurant.getOpeningHours().size() > 0)) {
       restaurant.setOpeningHours(openingHours);
       restaurantRepository.save(restaurant);
     }
@@ -118,5 +133,9 @@ public class RestaurantService {
   }
 
 
-
+  public ReservationListDTO getAllReservations(Long restaurantId) {
+    String url = "https://RESERVATIONSERVICE/v1/reservations/all/" + restaurantId;
+    UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url);
+    return restTemplate.getForObject(builder.toUriString(), ReservationListDTO.class);
+  }
 }

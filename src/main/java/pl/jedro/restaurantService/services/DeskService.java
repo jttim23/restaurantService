@@ -1,7 +1,13 @@
 package pl.jedro.restaurantService.services;
 
 import org.springframework.stereotype.Service;
-import pl.jedro.restaurantService.model.*;
+import pl.jedro.restaurantService.mappers.TableDTOMapper;
+import pl.jedro.restaurantService.model.DTOs.AvailableTablesDTO;
+import pl.jedro.restaurantService.model.DTOs.TableDTO;
+import pl.jedro.restaurantService.model.Desk;
+import pl.jedro.restaurantService.model.OpeningHour;
+import pl.jedro.restaurantService.model.Restaurant;
+import pl.jedro.restaurantService.model.State;
 import pl.jedro.restaurantService.repositories.RestaurantRepository;
 import pl.jedro.restaurantService.repositories.TableRepository;
 
@@ -16,23 +22,26 @@ import java.util.stream.Collectors;
 
 @Service
 public class
-TableService {
+DeskService {
   private TableRepository tableRepository;
   private RestaurantRepository restaurantRepository;
+  private TableDTOMapper tableDTOMapper;
 
-  public TableService(TableRepository tableRepository, RestaurantRepository restaurantRepository) {
+  public DeskService(TableRepository tableRepository, RestaurantRepository restaurantRepository) {
     this.tableRepository = tableRepository;
     this.restaurantRepository = restaurantRepository;
+    tableDTOMapper = TableDTOMapper.INSTANCE;
   }
 
-  public List<Desk> findAllTables(Long restaurantId) {
+  public List<TableDTO> findAllTables(Long restaurantId) {
     if (restaurantId == null) {
       throw new IllegalArgumentException();
     }
-    return tableRepository.findAll().stream().filter(table -> table.getRestaurant().getId().equals(restaurantId)).collect(Collectors.toList());
+    return tableRepository.findAll().stream().filter(table -> table.getRestaurant().getId().equals(restaurantId))
+        .map(desk -> tableDTOMapper.deskToTableDTO(desk)).collect(Collectors.toList());
   }
 
-  public Desk updateTable(Integer peopleQuantity, String description, Long tableId) {
+  public TableDTO updateTable(Integer peopleQuantity, String description, Long tableId) {
     if (tableId == null) {
       throw new IllegalArgumentException();
     }
@@ -43,7 +52,7 @@ TableService {
       tableRepository.save(savedDesk);
     }
 
-    return savedDesk;
+    return tableDTOMapper.deskToTableDTO(savedDesk);
   }
 
 
@@ -55,7 +64,7 @@ TableService {
     LocalDateTime dateTime;
     try {
       DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-      dateTime = LocalDateTime.parse(date,formatter);
+      dateTime = LocalDateTime.parse(date, formatter);
     } catch (DateTimeParseException e) {
       throw new IllegalArgumentException(e.getMessage());
     }
@@ -72,29 +81,33 @@ TableService {
     Set<OpeningHour> openingHours = restaurant.getOpeningHours();
     Optional<OpeningHour> openedDayOptional = openingHours.stream().filter(openingHour -> openingHour.getDayOfWeek().toString().equalsIgnoreCase(dateTime.getDayOfWeek().name()))
         .findAny();
-    if (openedDayOptional.isEmpty()){
+    if (openedDayOptional.isEmpty()) {
       return false;
     }
     OpeningHour openedDay = openedDayOptional.get();
 
-      try {
-        if (openedDay.getFromHour().isAfter(dateTime.toLocalTime()) || openedDay.getToHour().isBefore(dateTime.toLocalTime())) {
-          return false;
-        }
-        return true;
-      } catch (DateTimeParseException e) {
-        throw new IllegalArgumentException(e.getMessage());
-      }
-    }
-
-  public Desk setTableState(String state, Long tableId) {
-    Desk desk = tableRepository.findById(tableId).orElseThrow(IllegalArgumentException::new);
     try {
-      desk.setState(State.valueOf(state));
-    } catch (EnumConstantNotPresentException e){
+      if (openedDay.getFromHour().isAfter(dateTime.toLocalTime()) || openedDay.getToHour().isBefore(dateTime.toLocalTime())) {
+        return false;
+      }
+      return true;
+    } catch (DateTimeParseException e) {
+      throw new IllegalArgumentException(e.getMessage());
+    }
+  }
+
+  public TableDTO setTableState(String status, Long tableId) {
+    Desk desk = tableRepository.findById(tableId).orElseThrow(IllegalArgumentException::new);
+    State state;
+    try {
+      state = State.valueOf(status);
+    } catch (EnumConstantNotPresentException e) {
       throw new IllegalArgumentException();
     }
-    return desk;
+    if (desk.getState().equals(state)) {
+      return tableDTOMapper.deskToTableDTO(desk);
+    } else desk.setState(state);
+    return tableDTOMapper.deskToTableDTO(desk);
   }
 
 }

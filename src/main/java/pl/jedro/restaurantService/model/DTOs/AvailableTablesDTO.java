@@ -1,8 +1,9 @@
-package pl.jedro.restaurantService.model;
+package pl.jedro.restaurantService.model.DTOs;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import pl.jedro.restaurantService.model.Desk;
 
 import java.util.List;
 
